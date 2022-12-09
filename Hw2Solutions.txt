@@ -1,0 +1,228 @@
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        if(x < 0 || (x % 10 == 0 && x != 0)) {
+            return false;
+        }
+        
+        int revertedNumber = 0;
+        while(x > revertedNumber) {
+            revertedNumber = revertedNumber * 10 + x % 10;
+            x /= 10;
+        }
+        
+        if(x == revertedNumber || x == revertedNumber/10) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+};
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+	    int i,j,k,l,m,n;
+        map<int,int>mymap;
+        map<int,int>::iterator it;
+        vector<int>ans;
+        for(i=0;i<nums.size();i++){
+            it=mymap.find(target-nums[i]);
+                if(it!=mymap.end()){
+                     ans.push_back(it->second);
+                     ans.push_back(i);
+                     return ans;
+                }
+            else{
+                mymap.insert(make_pair(nums[i],i));
+            }
+        }
+        return nums;
+    }
+};
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) 
+    {
+        vector<vector<int>> v;        
+        sort(nums.begin(), nums.end());;
+        for(int i=nums.size()-1; i>1; --i)
+        {     
+            int k=i-1;
+            while(i>0 && i<nums.size()-1 && nums[i] == nums[i+1])
+                --i;
+                           
+            for(int j=0; j<i; ++j)
+            {        
+                for(; k>j && (nums[i] + nums[j] + nums[k]) >= 0; --k)
+                {
+                    if(nums[i] + nums[j] + nums[k] == 0 && !(j == k  || k == i))
+                    {
+                        v.emplace_back();
+                        auto &vv=v.back();
+                        vv.push_back(nums[i]);
+                        vv.push_back(nums[j]);
+                        vv.push_back(nums[k]);
+                        sort(begin(vv), end(vv));
+                    }                  
+                }
+            }
+        }        
+        sort(begin(v), end(v));
+        v.erase(unique(begin(v), end(v)), end(v));
+        return v;
+    }
+};
+cat words.txt | tr -s   n | sort | uniq -c | sort -r | awk {print ,}
+class Solution {
+public:
+    vector<int> smallerNumbersThanCurrent(vector<int>& nums) {
+        vector<vector<int>> r;
+
+	    for (int i = 0; i < nums.size(); ++i) {
+		    r.push_back(vector<int> {nums[i], i});
+	    }
+
+        sort(r.begin(), r.end());
+
+	    int n = 0;
+
+	    for (int i = 0; i < nums.size(); ++i) {
+		    if (i > 0 && r[i][0] != r[i - 1][0]) {
+			    n = i;
+		    }
+		    nums[r[i][1]] = n;
+	    }
+
+        return nums;
+    }
+};
+class Solution {
+public:
+    int arrangeCoins(int n) {
+        int i = 1;
+        while(n >= i) {
+            n -= i; 
+            i++;
+        }
+        return i - 1;
+    }
+};
+class Solution {
+public:
+    vector<int> createTargetArray(vector<int>& nums, vector<int>& index) {
+        int size = nums.size();
+        vector<int> bias(index.size(),0);
+        for (int i=1; i<size; i++) {
+            for (int j=0; j<i; j++) {
+                if (index[j] >= index[i])
+                    index[j]++;
+            }
+        }
+        vector<int> res(index.size(),0);
+        for (int i=0; i<index.size(); i++){
+            res[index[i]] = nums[i];
+        }
+        return res;
+    }
+};
+class BrowserHistory {
+private:
+    vector<string> br;
+    int curr, n;
+public:
+    BrowserHistory(string homepage) {
+        br.resize(1000);
+        curr = 0;
+        n = 1;
+        br[curr] = homepage;
+    }
+    
+    void visit(string url) {
+        br[++curr] = url;
+        n = curr + 1;
+    }
+    
+    string back(int steps) {
+        curr -= steps;
+        curr = curr >= 0 ? curr : 0;
+        return br[curr];
+    }
+    
+    string forward(int steps) {
+        curr += steps;
+        curr = curr < n ? curr : n-1;
+        return br[curr];
+    }
+};
+
+/**
+ * Your BrowserHistory object will be instantiated and called as such:
+ * BrowserHistory* obj = new BrowserHistory(homepage);
+ * obj->visit(url);
+ * string param_2 = obj->back(steps);
+ * string param_3 = obj->forward(steps);
+ */
+class Solution {
+public:
+    vector<int> successfulPairs(vector<int>& spells, vector<int>& potions, long long success) {
+        sort(potions.begin(), potions.end());        
+        int m = potions.size();        
+        vector<int> v1;
+        
+        // Iterate over all index
+        for(auto &it: spells){            
+            // req number
+            long long req = success/it + (success%it != 0);
+            
+            auto i = lower_bound(potions.begin(), potions.end(), req);         
+            if(i == potions.end())     v1.push_back(0);
+            else{
+                int ind = i - potions.begin();
+                v1.push_back(m-ind);
+            }
+        }
+        return v1;
+    }
+};
+class ThroneInheritance {
+public:
+     map<string,vector<string>> m;
+    string king;
+    unordered_set<string> s;
+public:
+    ThroneInheritance(string kingName) {
+        king = kingName;
+    }
+    
+    void birth(string parentName, string childName) {
+        m[parentName].push_back(childName);
+    }
+    
+    void death(string name) {
+        s.insert(name);
+    }
+    
+    void dfs(string vx,map<string,vector<string>>& m,vector<string>& ans)
+    {
+        if(s.count(vx) <= 0)
+            ans.push_back(vx);
+        auto it = m[vx];
+        for(string x:it)
+        {
+            dfs(x,m,ans);
+        }
+    }
+    vector<string> getInheritanceOrder() {
+        vector<string> ans;
+        dfs(king,m,ans);
+        return ans;
+    }
+};
+
+/**
+ * Your ThroneInheritance object will be instantiated and called as such:
+ * ThroneInheritance* obj = new ThroneInheritance(kingName);
+ * obj->birth(parentName,childName);
+ * obj->death(name);
+ * vector<string> param_3 = obj->getInheritanceOrder();
+ */
